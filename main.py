@@ -8,7 +8,7 @@ import os
 
 root = tk.Tk() # create a window
 root.title("Planner")
-root.geometry("900x925") # set the window size
+root.geometry("900x750") # set the window size
 root.configure(bg="#333333")
 entry = tk.Entry(root)
 
@@ -73,6 +73,8 @@ class App:
                 self.code = randomStr(4)
             if (len(self.results) == 6):
                 usrData = Answers(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5])
+                for i in self.results:
+                    self.debuger(i)
                 #self.debuger(usrData.check())
                 if usrData.check() == {True}:
                     eventDict = makeDict(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5], self.code)
@@ -139,13 +141,13 @@ class App:
         self.func = self.submitNew
         forget_all(root)
         event,year ,month ,day , time, apm = 0, 0, 0, 0, 0, 0
-        makeLable('\n*New Event Manager*', 18)
-        self.handleui(event, '\nWhat Event?')
-        self.handleui(year, '\nWhat Year?\nxxxx')
-        self.handleui(month, '\nWhat Month\nxx')
-        self.handleui(day, '\nWhat Day?\nxx')
-        self.handleui(time, '\nWhat Time?\nxxxx')
-        self.handleui(apm, '\nam or pm?')
+        makeLable('\n*Edit Event Manager*\n', 18)
+        self.handleui(event, 'What Event?')
+        self.handleui(year, 'What Year?\nxxxx')
+        self.handleui(month, 'What Month\nxx')
+        self.handleui(day, 'What Day?\nxx')
+        self.handleui(time, 'What Time?\nxxxx')
+        self.handleui(apm, 'am or pm?') 
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
         root.mainloop()
@@ -169,13 +171,13 @@ class App:
         forget_all(root)
         self.code = self.results[0]
         self.results = []
-        makeLable('\n*Edit Event Manager*', 18)
-        self.handleui(event, '\nWhat Event?')
-        self.handleui(year, '\nWhat Year?\nxxxx')
-        self.handleui(month, '\nWhat Month\nxx')
-        self.handleui(day, '\nWhat Day?\nxx')
-        self.handleui(time, '\nWhat Time?\nxxxx')
-        self.handleui(apm, '\nam or pm?') 
+        makeLable('\n*Edit Event Manager*\n', 18)
+        self.handleui(event, 'What Event?')
+        self.handleui(year, 'What Year?\nxxxx')
+        self.handleui(month, 'What Month\nxx')
+        self.handleui(day, 'What Day?\nxx')
+        self.handleui(time, 'What Time?\nxxxx')
+        self.handleui(apm, 'am or pm?') 
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
         root.mainloop()
@@ -321,7 +323,8 @@ class Answers:
         check3 = ((len(self.day[0]) == 2) & (all(map(lambda c: c.isdigit(), str(self.day[0])))))
         check4 = ((len(self.time[0]) == 4) & (all(map(lambda c: c.isdigit(), str(self.time[0])))))
         check5 = ((self.apm == 'am') | (self.apm == 'pm'))
-        check6 = int(self.time[0]) <= 1259
+        check6 = ((int(self.time[0][:2]) <= 12) & (int(self.time[0][2:]) <= 59))
+        print(int(self.time[0][2:]))
         #self.printAnswers()
         return {check1, check2, check3, check4, check5, check6}
 
@@ -419,7 +422,7 @@ def getDay(date):
     return day
 
 def miniCal(now):
-    return calendar.TextCalendar().formatmonth(now.year, now.month, w=5, l=2)# prints calender
+    return calendar.TextCalendar().formatmonth(now.year, now.month, w=3, l=0)# prints calender
 
 def getDays(now):
     return calendar.monthrange(now.year, now.month)[1]#representing [0][1], 0 is lowest in range and 1 is highest
