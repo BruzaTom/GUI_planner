@@ -73,8 +73,6 @@ class App:
                 self.code = randomStr(4)
             if (len(self.results) == 6):
                 usrData = Answers(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5])
-                for i in self.results:
-                    self.debuger(i)
                 #self.debuger(usrData.check())
                 if usrData.check() == {True}:
                     eventDict = makeDict(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5], self.code)
@@ -324,7 +322,6 @@ class Answers:
         check4 = ((len(self.time[0]) == 4) & (all(map(lambda c: c.isdigit(), str(self.time[0])))))
         check5 = ((self.apm == 'am') | (self.apm == 'pm'))
         check6 = ((int(self.time[0][:2]) <= 12) & (int(self.time[0][2:]) <= 59))
-        print(int(self.time[0][2:]))
         #self.printAnswers()
         return {check1, check2, check3, check4, check5, check6}
 
