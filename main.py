@@ -4,6 +4,7 @@ import datetime
 import random
 import string
 import ast
+import os
 
 root = tk.Tk() # create a window
 root.title("Planner")
@@ -11,11 +12,18 @@ root.geometry("900x925") # set the window size
 root.configure(bg="#333333")
 entry = tk.Entry(root)
 
+buttonbg = ''
+buttonlc = ''
+
+lablebg = ''
+lablelc = ''
+
 class App:
     def __init__(self):
         self.results = []
         self.newLst = []
         self.foundDict = {}
+        self.entries = []
         self.count = 0
         self.count2 = 0
         self.func = None
@@ -35,7 +43,7 @@ class App:
     def errMessage(self):
         self.count = 0
         forget_all(root)
-        makeLable('\n\n\n-Error0: Incorrect Format\n')
+        makeLable('\n\n\n-Error0: Incorrect Format\n', 16)
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Try Again', self.newEvent, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -44,7 +52,7 @@ class App:
     def errMessage1(self):
         self.count = 0
         forget_all(root)
-        makeLable('\n\n\n-Error0: Input Error\n')
+        makeLable('\n\n\n-Error0: Input Error\n', 16)
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Try Again', self.newEvent, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -52,7 +60,7 @@ class App:
 
     def ohno(self):
         forget_all(root)
-        makeLable('\n\n\n-Exception raised:\nThe Date You Entered Dosent Exist.\n')
+        makeLable('\n\n\n-Exception raised:\nThe Date You Entered Dosent Exist.\n', 16)
         makeButton('Try Again', self.newEvent, "#B0C4DE", "#444444")
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -65,7 +73,8 @@ class App:
                 self.code = randomStr(4)
             if (len(self.results) == 6):
                 usrData = Answers(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5])
-                if usrData.check() == True:
+                #self.debuger(usrData.check())
+                if usrData.check() == {True}:
                     eventDict = makeDict(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5], self.code)
                     newLst.append(eventDict)
                     for item in self.dataLst:
@@ -81,19 +90,21 @@ class App:
             self.ohno()
 
     def handleui(self, value, string):
-        makeLable(string)
+        makeLable(string, 12)
         value = newEntry()
         value.pack()
+        self.entries.append(value)
+        self.entries[0].focus_set()
         self.makeBind(value)
 
     def dataStr2(self, subject, dictLst):
         tempLst = sort_dates(dictLst)
         string = ''
         if tempLst == []:
-            makeLable(f'No Events {subject}..')
+            makeLable(f'No Events {subject}..', 18)
             return ''
         else:
-            makeLable(f'Events {subject}!\n')
+            makeLable(f'Events {subject}!\n', 18)
             for data in tempLst:
                 string += f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}\n" 
         return string
@@ -128,7 +139,7 @@ class App:
         self.func = self.submitNew
         forget_all(root)
         event,year ,month ,day , time, apm = 0, 0, 0, 0, 0, 0
-        makeLable('\n*New Event Manager*')
+        makeLable('\n*New Event Manager*', 18)
         self.handleui(event, '\nWhat Event?')
         self.handleui(year, '\nWhat Year?\nxxxx')
         self.handleui(month, '\nWhat Month\nxx')
@@ -142,7 +153,7 @@ class App:
     def errorMessage3(self):
         self.count = 0
         forget_all(root)
-        makeLable(f'\n\n\n-Error3: {self.results[0]} Not In Data..\n\n')
+        makeLable(f'\n\n\n-Error3: {self.results[0]} Not In Data..\n\n', 16)
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Try Again', self.editData, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -158,7 +169,7 @@ class App:
         forget_all(root)
         self.code = self.results[0]
         self.results = []
-        makeLable('\n*Edit Event Manager*')
+        makeLable('\n*Edit Event Manager*', 18)
         self.handleui(event, '\nWhat Event?')
         self.handleui(year, '\nWhat Year?\nxxxx')
         self.handleui(month, '\nWhat Month\nxx')
@@ -177,7 +188,7 @@ class App:
         self.func = self.changeData
         code = ''
         forget_all(root)
-        makeLable('\n*Enter In Event Manager*\n\n')
+        makeLable('\n*Enter In Event Manager*\n\n', 18)
         self.dataBox2('Stored', self.dataLst)
         self.handleui(code, '\nEnter ID#')
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
@@ -186,7 +197,7 @@ class App:
     def errorMessage4(self):
         self.count = 0
         forget_all(root)
-        makeLable(f'\n\n\n-Error4: {self.results[0]} Not In Data..\n\n')
+        makeLable(f'\n\n\n-Error4: {self.results[0]} Not In Data..\n\n', 16)
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Try Again', self.unschedual, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -214,9 +225,9 @@ class App:
         day = self.foundDict['Day']
         time = self.foundDict['Time']
         self.code = self.foundDict['Code']
-        makeLable('\n*Delete Event Manager*\n\n')
-        makeLable(f"\nAre You Sure You Want To Delete This?")
-        makeLable(f"\n{event} on {dayname} {month}-{day}-{year} at {time}\n")
+        makeLable('\n*Delete Event Manager*\n\n', 18)
+        makeLable(f"\nAre You Sure You Want To Delete This?", 16)
+        makeLable(f"\n{event} on {dayname} {month}-{day}-{year} at {time}\n", 14)
         makeButton('Yes', self.removeCode, "#B0C4DE", "#444444")
         makeButton('No - Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Try Again', self.unschedual, "#B0C4DE", "#444444")
@@ -238,7 +249,7 @@ class App:
         self.func = self.removeData
         code = ''
         forget_all(root)
-        makeLable('\n*Delete Event Manager*\n\n')
+        makeLable('\n*Delete Event Manager*\n\n', 18)
         self.dataBox2('Stored', self.dataLst)
         self.handleui(code, '\nEnter ID#')
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
@@ -250,7 +261,7 @@ class App:
 
     def checkSchedual(self):
         forget_all(root)
-        makeLable('\n\n\n\n')
+        makeLable('\n\n\n\n', 12)
         self.dataBox2('Scheduled', self.dataLst)
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -258,7 +269,7 @@ class App:
 
     def checkWeek(self):
         forget_all(root)
-        makeLable('\n\n\n\n')
+        makeLable('\n\n\n\n', 12)
         self.dataBox2('This Week', inWeek(self.dataLst, date))
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -266,7 +277,7 @@ class App:
 
     def checkTomorrow(self):
         forget_all(root)
-        makeLable('\n\n\n\n')
+        makeLable('\n\n\n\n', 12)
         self.dataBox2('Tomorrow', inTomorrow(self.dataLst, date))
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -274,7 +285,7 @@ class App:
 
     def checkToday(self):
         forget_all(root)
-        makeLable('\n\n\n\n')
+        makeLable('\n\n\n\n', 12)
         self.dataBox2('Today', inToday(self.dataLst, date))
         makeButton('Home', self.btm, "#B0C4DE", "#444444")
         makeButton('Options', self.options, "#B0C4DE", "#444444")
@@ -306,15 +317,13 @@ class Answers:
 
     def check(self):
         check1 = (len(self.year[0]) == 4) & (all(map(lambda c: c.isdigit(), str(self.year[0]))))
-        #print(str(self.year[0]))
-        check2 = (len(self.month[0]) == 2) & (all(map(lambda c: c.isdigit(), str(self.month[0])))) & (int(self.month[0]) <= 12)
-        check3 = (len(self.day[0]) == 2) & (all(map(lambda c: c.isdigit(), str(self.day[0]))))
-        check4 = (len(self.time[0]) == 4) & (all(map(lambda c: c.isdigit(), str(self.time[0]))))
-        check5 = (self.apm == 'am') | (self.apm == 'pm')
+        check2 = ((len(self.month[0]) == 2) & (all(map(lambda c: c.isdigit(), str(self.month[0])))) & (int(self.month[0]) <= 12))
+        check3 = ((len(self.day[0]) == 2) & (all(map(lambda c: c.isdigit(), str(self.day[0])))))
+        check4 = ((len(self.time[0]) == 4) & (all(map(lambda c: c.isdigit(), str(self.time[0])))))
+        check5 = ((self.apm == 'am') | (self.apm == 'pm'))
+        check6 = int(self.time[0]) <= 1259
         #self.printAnswers()
-        if (check1 == True) & (check2 == True) & (check3 == True) & (check4 == True) & (check5 == True):
-            return True
-        return False
+        return {check1, check2, check3, check4, check5, check6}
 
 def main():
     user = App()
@@ -335,10 +344,6 @@ def forget_all(parent):
     for widget in parent.winfo_children():
         widget.forget()
 #End tkinter
-
-def dataBox(subject, dictLst):
-    return tk.Label(root, text=dataStr(subject, dictLst), bg="#222222", fg="#B0C4DE", font=("Arial", 12, "bold"), padx=10, pady=5).pack() 
-
 def makeButton(name, func, lc, bgc):
     return tk.Button(
         root,
@@ -469,19 +474,8 @@ def updateData(dictLst, file):
     with open(file, "w") as f:
         f.write(str(dictLst))
 
-def dataStr(subject, dictLst):
-    tempLst = sort_dates(dictLst)
-    string = ''
-    if tempLst == []:
-        string = f'No Events {subject}..\n'
-    else:
-        newLbl = tk.Label(root, text=f'Events {subject}!', fg="#B0C4DE", bg="#333333", font=("Arial", 12, "bold")).pack()
-        for data in tempLst:
-            string += f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}\n" 
-    return string
-
-def makeLable(string):
-    return tk.Label(root, text=string, fg="#B0C4DE", bg="#333333", font=("Arial", 16, "bold")).pack()
+def makeLable(string, size):
+    return tk.Label(root, text=string, fg="#B0C4DE", bg="#333333", font=("Arial", size, "bold")).pack()
 
 def newEntry():
     return tk.Entry(root, width=15, bg="#E3E3E3", borderwidth=5)
@@ -495,6 +489,7 @@ time = timeOnly(today)
 date = dateOnly(today)
 day = getDay(date)
 daysLeft = getDaysLeft(days, day)
+updateData(removeOld(events(file), date, time), file)
 dataLst = events(file)
 
 main()
