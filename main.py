@@ -11,17 +11,21 @@ root.title("Planner")
 root.geometry("900x750") # set the window size
 root.configure(bg="#333333")
 entry = tk.Entry(root)
-
+#color controles
 buttonGrey = '#444444'
 lableGrey = '#333333'
-dataBoxbg = '#222222'
+dataBoxbg = lableGrey
 
-lightBlue = '#B0C4DE' 
+lightBlue = '#B0C4DE'
+green = '#66CD00'
+pink = '#EE1289'
 
 buttonbg = buttonGrey
+#global buttonlc
 buttonlc = lightBlue
 
 lablebg = lableGrey
+#global lablelc
 lablelc = lightBlue
 
 class App:
@@ -233,7 +237,7 @@ class App:
         self.code = self.foundDict['Code']
         makeLable('\n*Delete Event Manager*\n\n', 18)
         makeLable(f"\nAre You Sure You Want To Delete This?", 16)
-        makeLable(f"\n{event} on {dayname} {month}-{day}-{year} at {time}\n", 14)
+        makeLable(f"\n{event} on {dayname} {month}-{day}-{year} at {time}\n", 16)
         makeButton('Yes', self.removeCode)
         makeButton('No - Home', self.btm)
         makeButton('Try Again', self.unschedual)
@@ -263,7 +267,7 @@ class App:
         root.mainloop()
 
     def dataBox2(self, subject, dictLst):
-        return tk.Label(root, text=self.dataStr2(subject, dictLst), bg=dataBoxbg, fg="#B0C4DE", font=("Arial", 16, "bold"), padx=10, pady=5).pack()
+        return tk.Label(root, text=self.dataStr2(subject, dictLst), bg=dataBoxbg, fg=lablelc, font=("Arial", 16, "bold"), padx=10, pady=5).pack()
 
     def checkSchedual(self):
         forget_all(root)
@@ -299,15 +303,51 @@ class App:
 
     def options(self):
         forget_all(root)
-        tk.Label(root, text=initMessage(now, date, daysLeft), fg="#B0C4DE", bg="#333333", font=("Arial", 18, "bold")).pack()
-        tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg="#B0C4DE", bg="#333333").pack()
+        makeLable(initMessage(now, date, daysLeft), 18)
+        tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg=lablelc, bg=lablebg).pack()
         makeButton('Schedule', self.newEvent)
         makeButton('Edit', self.editData)
         makeButton('Remove', self.unschedual)
         makeButton('Home', self.btm)
+        tk.Button(
+        root,
+        text='Settings',
+        command=self.settings,
+        fg=buttonlc, bg=buttonbg,
+        height=1, width=8,
+        font=("Arial", 12, "bold")
+        ).pack()
         root.mainloop()
 
+    def scheme2(self):
+        global buttonlc
+        global lablelc
+        buttonlc = green
+        lablelc = green
+        self.settings()
+        
+    def scheme1(self):
+        global buttonlc
+        global lablelc
+        buttonlc = lightBlue
+        lablelc = lightBlue
+        self.settings()
 
+    def scheme3(self):
+        global buttonlc
+        global lablelc
+        buttonlc = pink
+        lablelc = pink
+        self.settings()
+
+    def settings(self):
+        forget_all(root)
+        makeLable('\n*Settings Manager*\n\n', 18)
+        makeButton('Scheme 1', self.scheme1)
+        makeButton('Scheme 2', self.scheme2)
+        makeButton('Scheme 3', self.scheme3)
+        makeButton('Home', self.btm)
+        root.mainloop()
 
 class Answers:
     def __init__(self, event, year, month, day, time, apm):
@@ -335,15 +375,15 @@ def main():
     user = App()
     updateData(removeOld(events(file), date, time), file)
     #print initmessage
-    tk.Label(root, text=initMessage(now, date, daysLeft), fg="#B0C4DE", bg="#333333", font=("Arial", 18, "bold")).pack()
+    makeLable(initMessage(now, date, daysLeft), 18)
     #pint calendar
-    tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg="#B0C4DE", bg="#333333").pack()
+    tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg=lablelc, bg=lablebg).pack()
     rcButton('Today\n'+str(len(inToday(events(file), date))), user.checkToday)
     rcButton('Tomorrow\n'+str(len(inTomorrow(events(file), date))), user.checkTomorrow)
     rcButton('This Week\n'+str(len(inWeek(events(file), date))), user.checkWeek)
     rcButton('All Data\n'+str(len(events(file))), user.checkSchedual)
     makeButton('Options', user.options)
-    tk.Label(root, text='\n\n\nDeveloped By Thomas Gomez @https://github.com/BruzaTom', fg="#B0C4DE", bg="#333333", font=("Arial", 10, "bold")).pack()
+    tk.Label(root, text='\n\n\nDeveloped By Thomas Gomez @https://github.com/BruzaTom', fg=lablelc, bg="#333333", font=("Arial", 10, "bold")).pack()
     root.mainloop()
 #tkinter functions
 def forget_all(parent):
