@@ -20,14 +20,6 @@ lightBlue = '#B0C4DE'
 green = '#66CD00'
 pink = '#EE1289'
 
-buttonbg = buttonGrey
-#global buttonlc
-buttonlc = lightBlue
-
-lablebg = lableGrey
-#global lablelc
-lablelc = lightBlue
-
 class App:
     def __init__(self):
         self.results = []
@@ -299,7 +291,6 @@ class App:
         self.dataBox2('Today', inToday(self.dataLst, date))
         makeButton('Home', self.btm)
         makeButton('Options', self.options)
-        root.mainloop()
 
     def options(self):
         forget_all(root)
@@ -322,22 +313,31 @@ class App:
     def scheme2(self):
         global buttonlc
         global lablelc
+        global userColors
         buttonlc = green
         lablelc = green
+        userColors[0] = green
+        updateData(userColors, colorsFile)
         self.settings()
         
     def scheme1(self):
         global buttonlc
         global lablelc
+        global userColors
         buttonlc = lightBlue
         lablelc = lightBlue
+        userColors[0] = lightBlue
+        updateData(userColors, colorsFile)
         self.settings()
 
     def scheme3(self):
         global buttonlc
         global lablelc
+        global userColors
         buttonlc = pink
         lablelc = pink
+        userColors[0] = pink
+        updateData(userColors, colorsFile)
         self.settings()
 
     def settings(self):
@@ -536,8 +536,14 @@ def makeLable(string, size):
 def newEntry():
     return tk.Entry(root, width=15, bg="#E3E3E3", borderwidth=5)
 
+colorsFile = 'pldata/colors.txt'
+userColors = events(colorsFile)
+buttonbg = buttonGrey
+buttonlc = userColors[0]
+lablebg = lableGrey
+lablelc = userColors[0]
 #globals
-file = "plannerData.txt"
+file = "pldata/plannerData.txt"
 now = datetime.datetime.now()
 days = getDays(now)
 today = str(datetime.datetime.today())
