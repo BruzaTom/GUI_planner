@@ -297,8 +297,8 @@ class App:
         makeLable(initMessage(now, date, daysLeft), 18)
         tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg=lablelc, bg=lablebg).pack()
         makeButton('Schedule', self.newEvent)
-        makeButton('Edit', self.editData)
         makeButton('Remove', self.unschedual)
+        makeButton('Edit', self.editData)
         makeButton('Home', self.btm)
         tk.Button(
         root,
