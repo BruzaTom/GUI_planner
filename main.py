@@ -1,4 +1,4 @@
-import tkinter as tk# first, import the library
+import tkinter as tk# import tkinter
 import calendar
 import datetime
 import random
@@ -12,11 +12,17 @@ root.geometry("900x750") # set the window size
 root.configure(bg="#333333")
 entry = tk.Entry(root)
 
-buttonbg = ''
-buttonlc = ''
+buttonGrey = '#444444'
+lableGrey = '#333333'
+dataBoxbg = '#222222'
 
-lablebg = ''
-lablelc = ''
+lightBlue = '#B0C4DE' 
+
+buttonbg = buttonGrey
+buttonlc = lightBlue
+
+lablebg = lableGrey
+lablelc = lightBlue
 
 class App:
     def __init__(self):
@@ -44,26 +50,26 @@ class App:
         self.count = 0
         forget_all(root)
         makeLable('\n\n\n-Error0: Incorrect Format\n', 16)
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Try Again', self.newEvent, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Try Again', self.newEvent)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def errMessage1(self):
         self.count = 0
         forget_all(root)
         makeLable('\n\n\n-Error0: Input Error\n', 16)
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Try Again', self.newEvent, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Try Again', self.newEvent)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def ohno(self):
         forget_all(root)
         makeLable('\n\n\n-Exception raised:\nThe Date You Entered Dosent Exist.\n', 16)
-        makeButton('Try Again', self.newEvent, "#B0C4DE", "#444444")
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Try Again', self.newEvent)
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
 
     def submitNew(self):
         newLst = []
@@ -127,7 +133,7 @@ class App:
     def readyButton(self):
         self.count += 1
         if self.count == self.count2:
-            makeButton('Submit', self.func, "#B0C4DE", "#444444")
+            makeButton('Submit', self.func)
 
     def newDict(self):
         pass
@@ -146,17 +152,17 @@ class App:
         self.handleui(day, 'What Day?\nxx')
         self.handleui(time, 'What Time?\nxxxx')
         self.handleui(apm, 'am or pm?') 
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def errorMessage3(self):
         self.count = 0
         forget_all(root)
         makeLable(f'\n\n\n-Error3: {self.results[0]} Not In Data..\n\n', 16)
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Try Again', self.editData, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Try Again', self.editData)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def changeData(self):
@@ -176,8 +182,8 @@ class App:
         self.handleui(day, 'What Day?\nxx')
         self.handleui(time, 'What Time?\nxxxx')
         self.handleui(apm, 'am or pm?') 
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
         root.mainloop()
 
 
@@ -191,16 +197,16 @@ class App:
         makeLable('\n*Enter In Event Manager*\n\n', 18)
         self.dataBox2('Stored', self.dataLst)
         self.handleui(code, '\nEnter ID#')
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
 
     def errorMessage4(self):
         self.count = 0
         forget_all(root)
         makeLable(f'\n\n\n-Error4: {self.results[0]} Not In Data..\n\n', 16)
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Try Again', self.unschedual, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Try Again', self.unschedual)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def removeData(self):
@@ -228,10 +234,10 @@ class App:
         makeLable('\n*Delete Event Manager*\n\n', 18)
         makeLable(f"\nAre You Sure You Want To Delete This?", 16)
         makeLable(f"\n{event} on {dayname} {month}-{day}-{year} at {time}\n", 14)
-        makeButton('Yes', self.removeCode, "#B0C4DE", "#444444")
-        makeButton('No - Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Try Again', self.unschedual, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Yes', self.removeCode)
+        makeButton('No - Home', self.btm)
+        makeButton('Try Again', self.unschedual)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def removeCode(self):
@@ -252,53 +258,53 @@ class App:
         makeLable('\n*Delete Event Manager*\n\n', 18)
         self.dataBox2('Stored', self.dataLst)
         self.handleui(code, '\nEnter ID#')
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def dataBox2(self, subject, dictLst):
-        return tk.Label(root, text=self.dataStr2(subject, dictLst), bg="#222222", fg="#B0C4DE", font=("Arial", 16, "bold"), padx=10, pady=5).pack()
+        return tk.Label(root, text=self.dataStr2(subject, dictLst), bg=dataBoxbg, fg="#B0C4DE", font=("Arial", 16, "bold"), padx=10, pady=5).pack()
 
     def checkSchedual(self):
         forget_all(root)
         makeLable('\n\n\n\n', 12)
         self.dataBox2('Scheduled', self.dataLst)
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def checkWeek(self):
         forget_all(root)
         makeLable('\n\n\n\n', 12)
         self.dataBox2('This Week', inWeek(self.dataLst, date))
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def checkTomorrow(self):
         forget_all(root)
         makeLable('\n\n\n\n', 12)
         self.dataBox2('Tomorrow', inTomorrow(self.dataLst, date))
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def checkToday(self):
         forget_all(root)
         makeLable('\n\n\n\n', 12)
         self.dataBox2('Today', inToday(self.dataLst, date))
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
-        makeButton('Options', self.options, "#B0C4DE", "#444444")
+        makeButton('Home', self.btm)
+        makeButton('Options', self.options)
         root.mainloop()
 
     def options(self):
         forget_all(root)
         tk.Label(root, text=initMessage(now, date, daysLeft), fg="#B0C4DE", bg="#333333", font=("Arial", 18, "bold")).pack()
         tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg="#B0C4DE", bg="#333333").pack()
-        makeButton('Schedule', self.newEvent, "#B0C4DE", "#444444")
-        makeButton('Edit', self.editData, "#B0C4DE", "#444444")
-        makeButton('Remove', self.unschedual, "#B0C4DE", "#444444")
-        makeButton('Home', self.btm, "#B0C4DE", "#444444")
+        makeButton('Schedule', self.newEvent)
+        makeButton('Edit', self.editData)
+        makeButton('Remove', self.unschedual)
+        makeButton('Home', self.btm)
         root.mainloop()
 
 
@@ -332,11 +338,11 @@ def main():
     tk.Label(root, text=initMessage(now, date, daysLeft), fg="#B0C4DE", bg="#333333", font=("Arial", 18, "bold")).pack()
     #pint calendar
     tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg="#B0C4DE", bg="#333333").pack()
-    makeButton('Today\n'+str(len(inToday(events(file), date))), user.checkToday, "#444444", "#B0C4DE")
-    makeButton('Tomorrow\n'+str(len(inTomorrow(events(file), date))), user.checkTomorrow, "#444444", "#B0C4DE")
-    makeButton('This Week\n'+str(len(inWeek(events(file), date))), user.checkWeek, "#444444", "#B0C4DE")
-    makeButton('All Data\n'+str(len(events(file))), user.checkSchedual, "#444444", "#B0C4DE")
-    makeButton('Options', user.options, "#B0C4DE", "#444444")
+    rcButton('Today\n'+str(len(inToday(events(file), date))), user.checkToday)
+    rcButton('Tomorrow\n'+str(len(inTomorrow(events(file), date))), user.checkTomorrow)
+    rcButton('This Week\n'+str(len(inWeek(events(file), date))), user.checkWeek)
+    rcButton('All Data\n'+str(len(events(file))), user.checkSchedual)
+    makeButton('Options', user.options)
     tk.Label(root, text='\n\n\nDeveloped By Thomas Gomez @https://github.com/BruzaTom', fg="#B0C4DE", bg="#333333", font=("Arial", 10, "bold")).pack()
     root.mainloop()
 #tkinter functions
@@ -344,12 +350,22 @@ def forget_all(parent):
     for widget in parent.winfo_children():
         widget.forget()
 #End tkinter
-def makeButton(name, func, lc, bgc):
+def rcButton(name, func):
     return tk.Button(
         root,
         text=name,
         command=func,
-        fg=lc, bg=bgc,
+        fg=buttonbg, bg=buttonlc,
+        height=3, width=8,
+        font=("Arial", 12, "bold")
+        ).pack()
+
+def makeButton(name, func):
+    return tk.Button(
+        root,
+        text=name,
+        command=func,
+        fg=buttonlc, bg=buttonbg,
         height=3, width=8,
         font=("Arial", 12, "bold")
         ).pack()
@@ -475,7 +491,7 @@ def updateData(dictLst, file):
         f.write(str(dictLst))
 
 def makeLable(string, size):
-    return tk.Label(root, text=string, fg="#B0C4DE", bg="#333333", font=("Arial", size, "bold")).pack()
+    return tk.Label(root, text=string, fg=lablelc, bg=lablebg, font=("Arial", size, "bold")).pack()
 
 def newEntry():
     return tk.Entry(root, width=15, bg="#E3E3E3", borderwidth=5)
