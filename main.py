@@ -30,7 +30,7 @@ class App:
         self.count2 = 0
         self.func = None
         self.code = None
-        self.dataLst = events(file)
+        self.dataLst = getLst(file)
         self.weekEvents = inWeek(self.dataLst, date)
         self.file = file
         self.now = now
@@ -82,7 +82,7 @@ class App:
                     for item in self.dataLst:
                         if self.code != item['Code']:
                             newLst.append(item)
-                    updateData(newLst, self.file)
+                    updateFile(newLst, self.file)
                 else:
                     self.errMessage()
             else:
@@ -138,6 +138,7 @@ class App:
         self.count = 0
         self.count2 = 6
         self.results = []
+        self.entries = []
         self.func = self.submitNew
         forget_all(root)
         event,year ,month ,day , time, apm = 0, 0, 0, 0, 0, 0
@@ -165,6 +166,7 @@ class App:
         event,year ,month ,day , time, apm = 0, 0, 0, 0, 0, 0
         self.count = 0
         self.count2 = 6
+        self.entries = []
         self.func = self.submitNew
         if self.results[0] not in map(lambda d: d.get('Code'), self.dataLst):
             self.errorMessage3()
@@ -187,6 +189,7 @@ class App:
         self.count = 0
         self.count2 = 1
         self.results = []
+        self.entries = []
         self.func = self.changeData
         code = ''
         forget_all(root)
@@ -220,6 +223,7 @@ class App:
 
     def areYouShure(self):
         forget_all(root)
+        self.entries = []
         event = self.foundDict['Event']
         dayname = self.foundDict['Dayname']
         year = self.foundDict['Year']
@@ -241,13 +245,14 @@ class App:
         for item in self.dataLst:
             if self.code != item['Code']:
                 newLst.append(item)
-            updateData(newLst, self.file)
+            updateFile(newLst, self.file)
         self.btm() 
 
     def unschedual(self):
         self.count = 0
         self.count2 = 1
         self.results = []
+        self.entries = []
         self.func = self.removeData
         code = ''
         forget_all(root)
@@ -317,7 +322,7 @@ class App:
         buttonlc = green
         lablelc = green
         userColors[0] = green
-        updateData(userColors, colorsFile)
+        updateFile(userColors, colorsFile)
         self.settings()
         
     def scheme1(self):
@@ -327,7 +332,7 @@ class App:
         buttonlc = lightBlue
         lablelc = lightBlue
         userColors[0] = lightBlue
-        updateData(userColors, colorsFile)
+        updateFile(userColors, colorsFile)
         self.settings()
 
     def scheme3(self):
@@ -337,7 +342,7 @@ class App:
         buttonlc = pink
         lablelc = pink
         userColors[0] = pink
-        updateData(userColors, colorsFile)
+        updateFile(userColors, colorsFile)
         self.settings()
 
     def settings(self):
@@ -373,15 +378,15 @@ class Answers:
 
 def main():
     user = App()
-    updateData(removeOld(events(file), date, time), file)
+    updateFile(removeOld(getLst(file), date, time), file)
     #print initmessage
     makeLable(initMessage(now, date, daysLeft), 18)
     #pint calendar
     tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg=lablelc, bg=lablebg).pack()
-    rcButton('Today\n'+str(len(inToday(events(file), date))), user.checkToday)
-    rcButton('Tomorrow\n'+str(len(inTomorrow(events(file), date))), user.checkTomorrow)
-    rcButton('This Week\n'+str(len(inWeek(events(file), date))), user.checkWeek)
-    rcButton('All Data\n'+str(len(events(file))), user.checkSchedual)
+    rcButton('Today\n'+str(len(inToday(getLst(file), date))), user.checkToday)
+    rcButton('Tomorrow\n'+str(len(inTomorrow(getLst(file), date))), user.checkTomorrow)
+    rcButton('This Week\n'+str(len(inWeek(getLst(file), date))), user.checkWeek)
+    rcButton('All Data\n'+str(len(getLst(file))), user.checkSchedual)
     makeButton('Options', user.options)
     tk.Label(root, text='\n\n\nDeveloped By Thomas Gomez @https://github.com/BruzaTom', fg=lablelc, bg="#333333", font=("Arial", 10, "bold")).pack()
     root.mainloop()
@@ -506,7 +511,7 @@ def randomStr(length):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for _ in range(length))
 
-def events(file):
+def getLst(file):
     dictLst = []
     with open(file) as f: 
         data = f.read()
@@ -526,7 +531,7 @@ def makeDict(event, year, month, day, time, apm, code):
         })
     return newDict
 
-def updateData(dictLst, file):
+def updateFile(dictLst, file):
     with open(file, "w") as f:
         f.write(str(dictLst))
 
@@ -537,7 +542,7 @@ def newEntry():
     return tk.Entry(root, width=15, bg="#E3E3E3", borderwidth=5)
 
 colorsFile = 'pldata/colors.txt'
-userColors = events(colorsFile)
+userColors = getLst(colorsFile)
 buttonbg = buttonGrey
 buttonlc = userColors[0]
 lablebg = lableGrey
@@ -551,7 +556,7 @@ time = timeOnly(today)
 date = dateOnly(today)
 day = getDay(date)
 daysLeft = getDaysLeft(days, day)
-updateData(removeOld(events(file), date, time), file)
-dataLst = events(file)
+updateFile(removeOld(getLst(file), date, time), file)
+dataLst = getLst(file)
 
 main()
