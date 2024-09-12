@@ -30,9 +30,9 @@ class App:
         self.count2 = 0
         self.func = None
         self.code = None
-        self.dataLst = getLst(file)
+        self.dataLst = getLst(dataFile)
         self.weekEvents = inWeek(self.dataLst, date)
-        self.file = file
+        self.dataFile = dataFile
         self.now = now
         self.days = days
         self.today = today
@@ -80,9 +80,9 @@ class App:
                     eventDict = makeDict(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5], self.code)
                     newLst.append(eventDict)
                     for item in self.dataLst:
-                        if self.code != item['Code']:
+                        if self.code != item['Code']: #a bug exist, theres a small chance the random code is generated twice
                             newLst.append(item)
-                    updateFile(newLst, self.file)
+                    updateFile(newLst, self.dataFile)
                 else:
                     self.errMessage()
             else:
@@ -245,7 +245,7 @@ class App:
         for item in self.dataLst:
             if self.code != item['Code']:
                 newLst.append(item)
-            updateFile(newLst, self.file)
+            updateFile(newLst, self.dataFile)
         self.btm() 
 
     def unschedual(self):
@@ -378,15 +378,15 @@ class Answers:
 
 def main():
     user = App()
-    updateFile(removeOld(getLst(file), date, time), file)
+    updateFile(removeOld(getLst(dataFile), date, time), dataFile)
     #print initmessage
     makeLable(initMessage(now, date, daysLeft), 18)
     #pint calendar
     tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg=lablelc, bg=lablebg).pack()
-    rcButton('Today\n'+str(len(inToday(getLst(file), date))), user.checkToday)
-    rcButton('Tomorrow\n'+str(len(inTomorrow(getLst(file), date))), user.checkTomorrow)
-    rcButton('This Week\n'+str(len(inWeek(getLst(file), date))), user.checkWeek)
-    rcButton('All Data\n'+str(len(getLst(file))), user.checkSchedual)
+    rcButton('Today\n'+str(len(inToday(getLst(dataFile), date))), user.checkToday)
+    rcButton('Tomorrow\n'+str(len(inTomorrow(getLst(dataFile), date))), user.checkTomorrow)
+    rcButton('This Week\n'+str(len(inWeek(getLst(dataFile), date))), user.checkWeek)
+    rcButton('All Data\n'+str(len(getLst(dataFile))), user.checkSchedual)
     makeButton('Options', user.options)
     tk.Label(root, text='\n\n\nDeveloped By Thomas Gomez @https://github.com/BruzaTom', fg=lablelc, bg="#333333", font=("Arial", 10, "bold")).pack()
     root.mainloop()
@@ -480,7 +480,7 @@ def getDay(date):
     return day
 
 def miniCal(now):
-    return calendar.TextCalendar().formatmonth(now.year, now.month, w=3, l=0)# prints calender
+    return calendar.TextCalendar().formatmonth(now.year, now.month, w=3, l=0)# string of calender
 
 def getDays(now):
     return calendar.monthrange(now.year, now.month)[1]#representing [0][1], 0 is lowest in range and 1 is highest
@@ -531,9 +531,9 @@ def makeDict(event, year, month, day, time, apm, code):
         })
     return newDict
 
-def updateFile(dictLst, file):
+def updateFile(Lst, file):
     with open(file, "w") as f:
-        f.write(str(dictLst))
+        f.write(str(Lst))
 
 def makeLable(string, size):
     return tk.Label(root, text=string, fg=lablelc, bg=lablebg, font=("Arial", size, "bold")).pack()
@@ -548,7 +548,7 @@ buttonlc = userColors[0]
 lablebg = lableGrey
 lablelc = userColors[0]
 #globals
-file = "pldata/plannerData.txt"
+dataFile = "pldata/plannerData.txt"
 now = datetime.datetime.now()
 days = getDays(now)
 today = str(datetime.datetime.today())
@@ -556,7 +556,7 @@ time = timeOnly(today)
 date = dateOnly(today)
 day = getDay(date)
 daysLeft = getDaysLeft(days, day)
-updateFile(removeOld(getLst(file), date, time), file)
-dataLst = getLst(file)
+updateFile(removeOld(getLst(dataFile), date, time), dataFile)
+dataLst = getLst(dataFile)
 
 main()
