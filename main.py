@@ -430,9 +430,22 @@ def inTomorrow(dictLst, date):
     thisMonth = date[5:7]
     thisDay = date[8:10]
     numThisDay = int(thisDay)
-    for diction in dictLst:
-        if (diction['Year'] == thisYear) & (diction['Month'] == thisMonth) & (numThisDay + 1 == int(diction['Day'])):
-            tempLst.append(diction)
+    if int(thisDay) + 1 > getDays(now):
+        overDay = '0' + str((int(thisDay) + 1) - getDays(now))
+        overMonth = str(int(thisMonth) + 1)
+        overYear = thisYear
+        if int(overMonth) > 12:
+            overMonth = '01'
+            overYear = str(int(thisYear) + 1)
+        for diction in dictLst:
+            #print(f"dict: {int(diction['Year'] + diction['Month'] + diction['Day'])}, over: {int(overYear + overMonth + overDay)}")
+            if int(diction['Year'] + diction['Month'] + diction['Day']) <= int(overYear + overMonth + overDay):
+                if (diction not in inToday(dictLst, date)) & (diction not in inTomorrow(dictLst, date)):
+                    tempLst.append(diction)
+    else:
+        for diction in dictLst:
+            if (diction['Year'] == thisYear) & (diction['Month'] == thisMonth) & (numThisDay + 1 == int(diction['Day'])):
+                tempLst.append(diction)
     return tempLst
 
 def inToday(dictLst, date):
@@ -501,10 +514,23 @@ def inWeek(dictLst, date):
     thisMonth = date[5:7]
     thisDay = date[8:10]
     numThisDay = int(thisDay)
-    for diction in dictLst:
-        if (diction['Year'] == thisYear) & (diction['Month'] == thisMonth) & (numThisDay + 7 >= int(diction['Day'])):
-            if (diction not in inToday(dictLst, date)) & (diction not in inTomorrow(dictLst, date)):
-                thisWeek.append(diction)
+    if int(thisDay) + 7 > getDays(now):
+        overDay = '0' + str((int(thisDay) + 7) - getDays(now))
+        overMonth = str(int(thisMonth) + 1)
+        overYear = thisYear
+        if int(overMonth) > 12:
+            overMonth = '01'
+            overYear = str(int(thisYear) + 1)
+        for diction in dictLst:
+            #print(f"dict: {int(diction['Year'] + diction['Month'] + diction['Day'])}, over: {int(overYear + overMonth + overDay)}")
+            if int(diction['Year'] + diction['Month'] + diction['Day']) <= int(overYear + overMonth + overDay):
+                if (diction not in inToday(dictLst, date)) & (diction not in inTomorrow(dictLst, date)):
+                    thisWeek.append(diction)
+    else:
+        for diction in dictLst:
+            if (diction['Year'] == thisYear) & (diction['Month'] == thisMonth) & (numThisDay + 7 >= int(diction['Day'])):
+                if (diction not in inToday(dictLst, date)) & (diction not in inTomorrow(dictLst, date)):
+                    thisWeek.append(diction)
     return thisWeek
 
 def randomStr(length):
