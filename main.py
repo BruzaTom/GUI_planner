@@ -438,9 +438,9 @@ def inTomorrow(dictLst, date):
             overMonth = '01'
             overYear = str(int(thisYear) + 1)
         for diction in dictLst:
-            #print(f"dict: {int(diction['Year'] + diction['Month'] + diction['Day'])}, over: {int(overYear + overMonth + overDay)}")
+            print(f"dict: {int(diction['Year'] + diction['Month'] + diction['Day'])}, over: {int(overYear + overMonth + overDay)}")
             if int(diction['Year'] + diction['Month'] + diction['Day']) <= int(overYear + overMonth + overDay):
-                if (diction not in inToday(dictLst, date)) & (diction not in inTomorrow(dictLst, date)):
+                if diction not in inToday(dictLst, date):
                     tempLst.append(diction)
     else:
         for diction in dictLst:
