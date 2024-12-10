@@ -9,6 +9,7 @@ import os
 root = tk.Tk() # create a window
 root.title("Planner")
 root.geometry("900x775") # set the window size
+root.wm_attributes('-zoomed', 'true')
 root.configure(bg="#333333")
 entry = tk.Entry(root)
 #color controles
