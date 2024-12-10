@@ -8,7 +8,7 @@ import os
 
 root = tk.Tk() # create a window
 root.title("Planner")
-root.geometry("900x750") # set the window size
+root.geometry("900x775") # set the window size
 root.configure(bg="#333333")
 entry = tk.Entry(root)
 #color controles
@@ -60,6 +60,24 @@ class App:
         makeButton('Options', self.options)
         root.mainloop()
 
+    def errorMessage3(self):
+        self.count = 0
+        forget_all(root)
+        makeLable(f'\n\n\n-Error3: {self.results[0]} Not In Data..\n\n', 16)
+        makeButton('Home', self.btm)
+        makeButton('Try Again', self.editData)
+        makeButton('Options', self.options)
+        root.mainloop()
+
+    def errorMessage4(self):
+        self.count = 0
+        forget_all(root)
+        makeLable(f'\n\n\n-Error4: {self.results[0]} Not In Data..\n\n', 16)
+        makeButton('Home', self.btm)
+        makeButton('Try Again', self.unschedual)
+        makeButton('Options', self.options)
+        root.mainloop()
+
     def ohno(self):
         forget_all(root)
         makeLable('\n\n\n-Exception raised:\nThe Date You Entered Dosent Exist.\n', 16)
@@ -91,14 +109,6 @@ class App:
         except Exception as _:
             self.ohno()
 
-    def handleui(self, value, string):
-        makeLable(string, 12)
-        value = newEntry()
-        value.pack()
-        self.entries.append(value)
-        self.entries[0].focus_set()
-        self.makeBind(value)
-
     def dataStr2(self, subject, dictLst):
         tempLst = sort_dates(dictLst)
         string = ''
@@ -114,25 +124,9 @@ class App:
     def debuger(self, value):
         print(f'DEBUGGER::{value}::')
 
-    def handle_entry(self, event):
-        self.readyButton()
-        self.results.append(event.widget.get())
-        event.widget.tk_focusNext().focus()
-
-    def makeBind(self, entry):
-        return entry.bind("<Return>", self.handle_entry)
-
     def btm(self):
         forget_all(root)
         main()
-    
-    def readyButton(self):
-        self.count += 1
-        if self.count == self.count2:
-            makeButton('Submit', self.func)
-
-    def newDict(self):
-        pass
 
     def newEvent(self):
         self.count = 0
@@ -143,22 +137,31 @@ class App:
         forget_all(root)
         event,year ,month ,day , time, apm = 0, 0, 0, 0, 0, 0
         makeLable('\n*Edit Event Manager*\n', 18)
-        self.handleui(event, 'What Event?')
-        self.handleui(year, 'What Year?\nxxxx')
-        self.handleui(month, 'What Month\nxx')
-        self.handleui(day, 'What Day?\nxx')
-        self.handleui(time, 'What Time?\nxxxx')
-        self.handleui(apm, 'am or pm?') 
+        makeLable(f'What Event?', 12)
+        event = tk.Entry(root, insertwidth=6, font=font_style)
+        event.pack()
+        event.focus_set()
+        makeLable(f'\nWhat Year?\nxxxx', 12)
+        year = tk.Entry(root, insertwidth=6, font=font_style)
+        year.pack()
+        makeLable(f'\nWhat Month?\nxx', 12)
+        month = tk.Entry(root, insertwidth=6, font=font_style)
+        month.pack()
+        makeLable(f'\nWhat day?\nxx', 12)
+        day = tk.Entry(root, insertwidth=6, font=font_style)
+        day.pack()
+        makeLable(f'\nWhat time?\nxxxx', 12)
+        time = tk.Entry(root, insertwidth=6, font=font_style)
+        time.pack()
+        makeLable(f'\nam or pm?', 12)
+        apm = tk.Entry(root, insertwidth=6, font=font_style)
+        apm.pack()
+        entrys_focus_color(root)
+        def assighn():
+            self.results = [event.get(), year.get(), month.get(), day.get(), time.get(), apm.get()]
+            self.func()
+        makeButton('Submit', assighn)
         makeButton('Home', self.btm)
-        makeButton('Options', self.options)
-        root.mainloop()
-
-    def errorMessage3(self):
-        self.count = 0
-        forget_all(root)
-        makeLable(f'\n\n\n-Error3: {self.results[0]} Not In Data..\n\n', 16)
-        makeButton('Home', self.btm)
-        makeButton('Try Again', self.editData)
         makeButton('Options', self.options)
         root.mainloop()
 
@@ -174,16 +177,33 @@ class App:
         self.code = self.results[0]
         self.results = []
         makeLable('\n*Edit Event Manager*\n', 18)
-        self.handleui(event, 'What Event?')
-        self.handleui(year, 'What Year?\nxxxx')
-        self.handleui(month, 'What Month\nxx')
-        self.handleui(day, 'What Day?\nxx')
-        self.handleui(time, 'What Time?\nxxxx')
-        self.handleui(apm, 'am or pm?') 
+        makeLable(f'What Event?', 12)
+        event = tk.Entry(root, insertwidth=6, font=font_style)
+        event.pack()
+        event.focus_set()
+        makeLable(f'\nWhat Year?\nxxxx', 12)
+        year = tk.Entry(root, insertwidth=6, font=font_style)
+        year.pack()
+        makeLable(f'\nWhat Month?\nxx', 12)
+        month = tk.Entry(root, insertwidth=6, font=font_style)
+        month.pack()
+        makeLable(f'\nWhat day?\nxx', 12)
+        day = tk.Entry(root, insertwidth=6, font=font_style)
+        day.pack()
+        makeLable(f'\nWhat time?\nxxxx', 12)
+        time = tk.Entry(root, insertwidth=6, font=font_style)
+        time.pack()
+        makeLable(f'\nam or pm?', 12)
+        apm = tk.Entry(root, insertwidth=6, font=font_style)
+        apm.pack()
+        entrys_focus_color(root)
+        def assighn():
+            self.results = [event.get(), year.get(), month.get(), day.get(), time.get(), apm.get()]
+            self.func()
+        makeButton('Submit', assighn)
         makeButton('Home', self.btm)
         makeButton('Options', self.options)
         root.mainloop()
-
 
     def editData(self):
         self.count = 0
@@ -195,18 +215,17 @@ class App:
         forget_all(root)
         makeLable('\n*Enter In Event Manager*\n\n', 18)
         self.dataBox2('Stored', self.dataLst)
-        self.handleui(code, '\nEnter ID#')
+        makeLable(f'\nEnter ID#', 12)
+        id = tk.Entry(root, insertwidth=6, font=font_style)
+        id.pack()
+        id.focus_set()
+        entrys_focus_color(root)
+        def assighn():
+            self.results = [id.get()]
+            self.func()
+        makeButton('Submit', assighn)
         makeButton('Home', self.btm)
         makeButton('Options', self.options)
-
-    def errorMessage4(self):
-        self.count = 0
-        forget_all(root)
-        makeLable(f'\n\n\n-Error4: {self.results[0]} Not In Data..\n\n', 16)
-        makeButton('Home', self.btm)
-        makeButton('Try Again', self.unschedual)
-        makeButton('Options', self.options)
-        root.mainloop()
 
     def removeData(self):
         self.code = self.results[0]
@@ -249,8 +268,6 @@ class App:
         self.btm() 
 
     def unschedual(self):
-        self.count = 0
-        self.count2 = 1
         self.results = []
         self.entries = []
         self.func = self.removeData
@@ -258,7 +275,14 @@ class App:
         forget_all(root)
         makeLable('\n*Delete Event Manager*\n\n', 18)
         self.dataBox2('Stored', self.dataLst)
-        self.handleui(code, '\nEnter ID#')
+        id = tk.Entry(root, insertwidth=6, font=font_style)
+        id.pack()
+        id.focus_set()
+        entrys_focus_color(root)
+        def assighn():
+            self.results = [id.get()]
+            self.func()
+        makeButton('Submit', assighn)
         makeButton('Home', self.btm)
         makeButton('Options', self.options)
         root.mainloop()
@@ -567,6 +591,24 @@ def makeLable(string, size):
 def newEntry():
     return tk.Entry(root, width=15, bg="#E3E3E3", borderwidth=5)
 
+#entrys bg color change on focus
+def on_focus_in(event):
+    event.widget.config(bg=userColors[0])
+
+def on_focus_out(event):
+    event.widget.config(bg='white')
+
+def on_return_next(event):
+    event.widget.tk_focusNext().focus()
+
+def entrys_focus_color(root):
+    for widget in root.winfo_children():
+        if isinstance(widget, tk.Entry):
+            widget.bind("<FocusIn>", on_focus_in)
+            widget.bind("<FocusOut>", on_focus_out)
+            widget.bind("<Return>", on_return_next)
+
+font_style = ("Helvetica", 12, "bold")
 colorsFile = 'pldata/colors.txt'
 userColors = getLst(colorsFile)
 buttonbg = buttonGrey
