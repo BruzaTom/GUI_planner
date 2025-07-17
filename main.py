@@ -609,14 +609,15 @@ def entrys_focus_color(root):
             widget.bind("<Return>", on_return_next)
 
 font_style = ("Helvetica", 12, "bold")
-colorsFile = 'pldata/colors.txt'
+script_dir = os.path.dirname(os.path.abspath(__file__))
+colorsFile = os.path.join(script_dir, 'pldata/colors.txt')
 userColors = getLst(colorsFile)
 buttonbg = buttonGrey
 buttonlc = userColors[0]
 lablebg = lableGrey
 lablelc = userColors[0]
 #globals
-dataFile = "pldata/plannerData.txt"
+dataFile = os.path.join(script_dir, "pldata/plannerData.txt")
 now = datetime.datetime.now()
 days = getDays(now)
 today = str(datetime.datetime.today())
