@@ -111,15 +111,13 @@ class App:
 
     def dataStr2(self, subject, dictLst):
         tempLst = sort_dates(dictLst)
-        string = ''
+        tuplst = []
         if tempLst == []:
-            makeLable(f'No Events {subject}..', 18)
-            return ''
-        else:
-            makeLable(f'Events {subject}!\n', 18)
-            for data in tempLst:
-                string += f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}\n" 
-        return string
+            return []
+        for data in tempLst:
+             tup = ( f"vvv---In {timeuntil(data['Year'], data['Month'], data['Day'], datetime.datetime.now())} days---vvv", f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}",)#could fix the days string to day if one day
+             tuplst.append(tup)
+        return tuplst
 
     def debuger(self, value):
         print(f'DEBUGGER::{value}::')
@@ -288,7 +286,18 @@ class App:
         root.mainloop()
 
     def dataBox2(self, subject, dictLst):
-        return tk.Label(root, text=self.dataStr2(subject, dictLst), bg=dataBoxbg, fg=lablelc, font=("Arial", 16, "bold"), padx=10, pady=5).pack()
+        tuplst = self.dataStr2(subject, dictLst)
+        tk.Label(root, text=f"Events {subject}.\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 18, "bold"), padx=10, pady=5).pack()
+        if tuplst == []:
+            tk.Label(root, text=f"No Events {subject}.\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 16, "bold"), padx=10, pady=5).pack() 
+        else:
+            for i in range(0, len(tuplst)):
+                tk.Label(root, text=tuplst[i][0], bg=dataBoxbg, fg=lablelc, font=("Arial", 10, "bold"), padx=10, pady=5).pack()
+                tk.Label(root, text=tuplst[i][1], bg=dataBoxbg, fg=lablelc, font=("Arial", 16, "bold"), padx=10, pady=5).pack()
+
+
+
+
 
     def checkSchedual(self):
         forget_all(root)
@@ -567,6 +576,18 @@ def getLst(file):
         data = f.read()
     dictLst = ast.literal_eval(data)
     return dictLst
+
+def timeuntil(year, month, day, today):
+    eventstring = year+month+day
+    convert = str(today)
+    todaystring = convert[:4]+convert[5:7]+convert[8:10]
+    end = datetime.datetime.strptime(eventstring, "%Y%m%d").date()
+    start = datetime.datetime.strptime(todaystring, "%Y%m%d").date()
+    diff = end - start
+    #print(eventstring)
+    #print(today)
+    #print(todaystring)
+    return str(diff.days)
 
 def makeDict(event, year, month, day, time, apm, code):
     newDict = {}
