@@ -1,0 +1,7 @@
+need to carry discription to new dict after edit event
+
+need to finish desighn on what to do with reoccuring option
+
+changedat and new event are very simaler, could make modular
+
+

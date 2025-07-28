@@ -109,6 +109,9 @@ class App:
         except Exception as _:
             self.ohno()
 
+    def reoccuring(self, option):
+        pass
+
     def dataStr2(self, subject, dictLst):
         tempLst = sort_dates(dictLst)
         tuplst = []
@@ -155,10 +158,32 @@ class App:
         apm = tk.Entry(root, insertwidth=6, font=font_style)
         apm.pack()
         entrys_focus_color(root)
-        def assighn():
+        def assighn(option):
+            answers["n", "d", "w", "bw", "m", "y"]
+            if option not in answers:
+                option = assighnreo(flag=True)
+            else:
+                if option == "n":
+                    pass
+                    
+            #self.func()
+        def assighnreo(flag=False):
             self.results = [event.get(), year.get(), month.get(), day.get(), time.get(), apm.get()]
-            self.func()
-        makeButton('Submit', assighn)
+            forget_all(root)
+            makeLable('\n\n\n\n', 12)
+            makeLable(f'{self.results[0]} at {self.results[4][:2]}:{self.results[4][2:]}{self.results[5]} on {self.results[2]}-{self.results[3]}-{self.results[1]}\n', 20)
+            makeLable('Reoccuring?\n\n', 20)
+            makeLable('"n" = no\n"d" = Daily\n"w" = Weekly\n"bw" = Bi-weekly\n"m" = Monthly\n"y" = Yearly\n', 18) 
+            if flag:
+                makeLable('*Invalid option*', 10)
+            reo = tk.Entry(root, insertwidth=6, font=font_style)
+            reo.pack()
+            reo.focus_set()
+            entrys_focus_color(root)
+            makeButton('Submit', lambda x=reo: assighn(x))
+            makeButton('Home', self.btm)
+            root.mainloop()
+        makeButton('Submit', assighnreo)
         makeButton('Home', self.btm)
         makeButton('Options', self.options)
         root.mainloop()
@@ -287,16 +312,16 @@ class App:
 
     def dataBox2(self, subject, dictLst, func):
         tuplst = self.dataStr2(subject, dictLst)
-        tk.Label(root, text=f"Events {subject}.\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 18, "bold"), padx=10, pady=5).pack()
+        makeLable(f"Events {subject}.\n", 18)
         if tuplst == []:
-            tk.Label(root, text=f"No Events {subject}.\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 16, "bold"), padx=10, pady=5).pack() 
+            makeLable(f"No Events {subject}.\n", 16) 
         else:
             def updatediscr(dictlst, file):
                 forget_all(root)
                 makeLable('\n\n\n\n', 12)
                 updateFile(dictlst, file)
                 self.dataLst = getLst(file)
-                tk.Label(root, text=f"Data updated..\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 16, "bold"), padx=10, pady=5).pack()
+                makeLable(f"Data updated..\n", 16)
                 tk.Button(
                     root,
                     text="Back",
@@ -305,6 +330,7 @@ class App:
                     height=3, width=8,
                     font=("Arial", 12, "bold")
                     ).pack()
+                makeButton('Home', self.btm)
                 root.mainloop()
             def editDiscr(thisDict):
                 string = ""
@@ -321,74 +347,33 @@ class App:
                     updatediscr(dictLst, self.dataFile)
                 for data in dictLst:
                     if data['Code'] == thisDict['Code']:
-                        tk.Label(root, text=f"Edit Discription.\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 20, "bold"), padx=10, pady=5).pack()
-                        tk.Label(root, text=f"Event: {data['Event']}\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 16, "bold"), padx=10, pady=5).pack()
+                        makeLable(f"Edit Discription.\n", 20)
+                        makeLable(f"Event: {data['Event']}\n", 16)
                         string = tk.Entry(root, insertwidth=6, font=font_style)
                         string.pack()
                         string.focus_set()
                         entrys_focus_color(root)
                         break
-                tk.Button(
-                    root,
-                    text="Confirm",
-                    command=confirm,
-                    fg=buttonlc, bg=buttonbg,
-                    height=3, width=20,
-                    font=("Arial", 12, "bold")
-                    ).pack()
+                makeButton("Confirm", confirm, length=20)
+                makeButton('Home', self.btm)
                 root.mainloop()
             def info(string, data, event):
                 forget_all(root)
                 makeLable('\n\n\n\n', 12)
-                tk.Label(root, text="Discription of\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 20, "bold"), padx=10, pady=5).pack()
-                tk.Label(root, text=event, bg=dataBoxbg, fg=lablelc, font=("Arial", 18, "bold"), padx=10, pady=5).pack()
-                tk.Label(root, text=string, bg=dataBoxbg, fg=lablelc, font=("Arial", 16, "bold"), padx=10, pady=5).pack()
+                makeLable("Discription of\n", 20)
+                makeLable(event, 18)
+                makeLable(string, 16)
                 if "disc" not in data:
-                    tk.Label(root, text="*No Discription*\n", bg=dataBoxbg, fg=lablelc, font=("Arial", 14, "bold"), padx=10, pady=5).pack()
-                    tk.Button(
-                        root,
-                        text="Add Discr.",
-                        command=lambda x=data: editDiscr(x),
-                        fg=buttonlc, bg=buttonbg,
-                        height=3, width=20,
-                        font=("Arial", 12, "bold")
-                        ).pack()
-                    tk.Button(
-                        root,
-                        text="Back",
-                        command=func,
-                        fg=buttonlc, bg=buttonbg,
-                        height=3, width=8,
-                        font=("Arial", 12, "bold")
-                        ).pack()
+                    makeLable("*No Discription*\n", 14)
+                    makeButton("Add Discr.", lambda x=data: editDiscr(x))
+                    makeButton("Back", func)
                 else:
-                    tk.Label(root, text=data["disc"], bg=dataBoxbg, fg=lablelc, font=("Arial", 14, "bold"), padx=10, pady=5).pack()
-                    tk.Button(
-                        root,
-                        text="Edit Discr.",
-                        command=lambda x=data: editDiscr(x),
-                        fg=buttonlc, bg=buttonbg,
-                        height=3, width=8,
-                        font=("Arial", 12, "bold")
-                        ).pack()
-                    tk.Button(
-                        root,
-                        text="Back",
-                        command=func,
-                        fg=buttonlc, bg=buttonbg,
-                        height=3, width=8,
-                        font=("Arial", 12, "bold")
-                        ).pack() 
+                    makeLable(data["disc"], 14)
+                    makeButton("Edit Discr.", lambda x=data: editDiscr(x))
+                    makeButton("Back", func)
                 root.mainloop()
             for i in range(0, len(tuplst)):
-                tk.Button(
-                        root,
-                        text=tuplst[i][1],
-                        command=lambda x=tuplst[i][0], y=tuplst[i][2], z=tuplst[i][1]: info(x, y, z),
-                        fg=buttonlc, bg=buttonbg,
-                        height=2, width=100,
-                        font=("Arial", 16, "bold")
-                        ).pack()
+                makeButton(tuplst[i][1], lambda x=tuplst[i][0], y=tuplst[i][2], z=tuplst[i][1]: info(x, y, z), length=100)
 
     def checkSchedual(self):
         forget_all(root)
@@ -529,13 +514,13 @@ def rcButton(name, func):
         font=("Arial", 12, "bold")
         ).pack()
 
-def makeButton(name, func):
+def makeButton(name, func, length=8):
     return tk.Button(
         root,
         text=name,
         command=func,
         fg=buttonlc, bg=buttonbg,
-        height=3, width=8,
+        height=3, width=length,
         font=("Arial", 12, "bold")
         ).pack()
 
