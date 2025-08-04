@@ -91,11 +91,11 @@ class App:
         try:
             if self.code == None:
                 self.code = randomStr(4)
-            if (len(self.results) == 6):
+            if (len(self.results) == 7):
                 usrData = Answers(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5])
                 #self.debuger(usrData.check())
                 if usrData.check() == {True}:
-                    eventDict = makeDict(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5], self.code)
+                    eventDict = makeDict(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5], self.code, self.results[6])
                     newLst.append(eventDict)
                     for item in self.dataLst:
                         if self.code != item['Code']: #a bug exist, theres a small chance the random code is generated twice
@@ -118,7 +118,7 @@ class App:
         if tempLst == []:
             return []
         for data in tempLst:
-             tup = ( f"This event is in {timeuntil(data['Year'], data['Month'], data['Day'], datetime.datetime.now())} days.\n", f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}", data)#could fix the days string to day if one day
+             tup = ( f"This event is in {timeuntil(data['Year'], data['Month'], data['Day'], datetime.datetime.now())} days.\n", f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}\nThis event reoccurs {data['Reo']}.", data)#could fix the days string to day if one day
              tuplst.append(tup)
         return tuplst
 
@@ -159,14 +159,26 @@ class App:
         apm.pack()
         entrys_focus_color(root)
         def assighn(option):
-            answers["n", "d", "w", "bw", "m", "y"]
-            if option not in answers:
-                option = assighnreo(flag=True)
+            answer = option.get()
+            self.debuger(answer)
+            answers = ["n", "d", "w", "bw", "m", "y"]
+            if answer not in answers:
+                assighnreo(flag=True)
             else:
-                if option == "n":
-                    pass
+                if answer == "n":
+                   self.results.append("None")
+                if answer == "d":
+                   self.results.append("Daily")
+                if answer == "w":
+                   self.results.append("Weekly")
+                if answer == "bw":
+                   self.results.append("Bi-Weekly")
+                if answer == "m":
+                   self.results.append("Monthly")
+                if answer == "y":
+                   self.results.append("Yearly")
                     
-            #self.func()
+            self.func()
         def assighnreo(flag=False):
             self.results = [event.get(), year.get(), month.get(), day.get(), time.get(), apm.get()]
             forget_all(root)
@@ -482,7 +494,7 @@ class Answers:
         check4 = ((len(self.time[0]) == 4) & (all(map(lambda c: c.isdigit(), str(self.time[0])))))
         check5 = ((self.apm == 'am') | (self.apm == 'pm'))
         check6 = ((int(self.time[0][:2]) <= 12) & (int(self.time[0][2:]) <= 59))
-        #self.printAnswers()
+        self.printAnswers()
         return {check1, check2, check3, check4, check5, check6}
 
 def main():
@@ -665,7 +677,7 @@ def timeuntil(year, month, day, today):
     #print(todaystring)
     return str(diff.days)
 
-def makeDict(event, year, month, day, time, apm, code):
+def makeDict(event, year, month, day, time, apm, code, reo):
     newDict = {}
     newDict.update({
         'Event': event,
@@ -674,6 +686,7 @@ def makeDict(event, year, month, day, time, apm, code):
         'Day': day,
         'Dayname': calendar.day_abbr[datetime.date(int(year), int(month), int(day)).weekday()],
         'Time': time[:2]+':'+time[2:]+apm,
+        'Reo' : reo,
         'Code': code
         })
     return newDict
