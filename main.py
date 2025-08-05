@@ -1,6 +1,7 @@
 import tkinter as tk# import tkinter
+from datetime import datetime, date, timedelta
 import calendar
-import datetime
+from dateutil.relativedelta import relativedelta
 import random
 import string
 import ast
@@ -31,13 +32,13 @@ class App:
         self.func = None
         self.code = None
         self.dataLst = getLst(dataFile)
-        self.weekEvents = inWeek(self.dataLst, date)
+        self.weekEvents = inWeek(self.dataLst, current_date)
         self.dataFile = dataFile
         self.now = now
         self.days = days
         self.today = today
         self.thisTime = time
-        self.date = date
+        self.date = current_date
         self.thisDay = day
         self.daysLeft = daysLeft
         self.schedual = '\n*New Event Manager*'
@@ -90,27 +91,32 @@ class App:
         eventDict = {}
         try:
             if self.code == None:
+                #print('1')
                 self.code = randomStr(4)
             if (len(self.results) == 7):
+                #print('2')
                 usrData = Answers(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5])
                 #self.debuger(usrData.check())
                 if usrData.check() == {True}:
+                    #print('3')
                     eventDict = makeDict(self.results[0], self.results[1], self.results[2], self.results[3], self.results[4], self.results[5], self.code, self.results[6])
                     newLst.append(eventDict)
                     for item in self.dataLst:
+                        #print("4")
                         if self.code != item['Code']: #a bug exist, theres a small chance the random code is generated twice
+                            #print("5")
                             newLst.append(item)
                     updateFile(newLst, self.dataFile)
                 else:
+                    #print('6')
                     self.errMessage()
             else:
+                #print('7')
                 self.errMessage1()
+            #print('8')
             self.btm()
         except Exception as _:
             self.ohno()
-
-    def reoccuring(self, option):
-        pass
 
     def dataStr2(self, subject, dictLst):
         tempLst = sort_dates(dictLst)
@@ -118,7 +124,7 @@ class App:
         if tempLst == []:
             return []
         for data in tempLst:
-             tup = ( f"This event is in {timeuntil(data['Year'], data['Month'], data['Day'], datetime.datetime.now())} days.\n", f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}\nThis event reoccurs {data['Reo']}.", data)#could fix the days string to day if one day
+             tup = ( f"This event is in {timeuntil(data['Year'], data['Month'], data['Day'], datetime.now())} days.\n", f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}\nThis event reoccurs {data['Reo']}.", data)#could fix the days string to day if one day
              tuplst.append(tup)
         return tuplst
 
@@ -160,7 +166,7 @@ class App:
         entrys_focus_color(root)
         def assighn(option):
             answer = option.get()
-            self.debuger(answer)
+            #self.debuger(answer)
             answers = ["n", "d", "w", "bw", "m", "y"]
             if answer not in answers:
                 assighnreo(flag=True)
@@ -177,7 +183,7 @@ class App:
                    self.results.append("Monthly")
                 if answer == "y":
                    self.results.append("Yearly")
-                    
+            print(self.results) 
             self.func()
         def assighnreo(flag=False):
             self.results = [event.get(), year.get(), month.get(), day.get(), time.get(), apm.get()]
@@ -371,15 +377,17 @@ class App:
                 root.mainloop()
             def info(string, data, event):
                 forget_all(root)
-                makeLable('\n\n\n\n', 12)
+                makeLable('\n\n', 12)
                 makeLable("Discription of\n", 20)
                 makeLable(event, 18)
                 makeLable(string, 16)
+                makeReo(data)
                 if "disc" not in data:
-                    makeLable("*No Discription*\n", 14)
+                    makeLable("\n*No Discription*\n", 14)
                     makeButton("Add Discr.", lambda x=data: editDiscr(x))
                     makeButton("Back", func)
                 else:
+                    makeLable("", 10)
                     makeLable(data["disc"], 14)
                     makeButton("Edit Discr.", lambda x=data: editDiscr(x))
                     makeButton("Back", func)
@@ -398,7 +406,7 @@ class App:
     def checkWeek(self):
         forget_all(root)
         makeLable('\n\n\n\n', 12)
-        self.dataBox2('This Week', inWeek(self.dataLst, date), self.checkWeek)
+        self.dataBox2('This Week', inWeek(self.dataLst, current_date), self.checkWeek)
         makeButton('Home', self.btm)
         makeButton('Options', self.options)
         root.mainloop()
@@ -406,7 +414,7 @@ class App:
     def checkTomorrow(self):
         forget_all(root)
         makeLable('\n\n\n\n', 12)
-        self.dataBox2('Tomorrow', inTomorrow(self.dataLst, date), self.checkTomorrow)
+        self.dataBox2('Tomorrow', inTomorrow(self.dataLst, current_date), self.checkTomorrow)
         makeButton('Home', self.btm)
         makeButton('Options', self.options)
         root.mainloop()
@@ -414,13 +422,13 @@ class App:
     def checkToday(self):
         forget_all(root)
         makeLable('\n\n\n\n', 12)
-        self.dataBox2('Today', inToday(self.dataLst, date), self.checkToday)
+        self.dataBox2('Today', inToday(self.dataLst, current_date), self.checkToday)
         makeButton('Home', self.btm)
         makeButton('Options', self.options)
 
     def options(self):
         forget_all(root)
-        makeLable(initMessage(now, date, daysLeft), 18)
+        makeLable(initMessage(now, current_date, daysLeft), 18)
         tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg=lablelc, bg=lablebg).pack()
         makeButton('Schedule', self.newEvent)
         makeButton('Remove', self.unschedual)
@@ -494,19 +502,19 @@ class Answers:
         check4 = ((len(self.time[0]) == 4) & (all(map(lambda c: c.isdigit(), str(self.time[0])))))
         check5 = ((self.apm == 'am') | (self.apm == 'pm'))
         check6 = ((int(self.time[0][:2]) <= 12) & (int(self.time[0][2:]) <= 59))
-        self.printAnswers()
+        #self.printAnswers()
         return {check1, check2, check3, check4, check5, check6}
 
 def main():
     user = App()
-    updateFile(removeOld(getLst(dataFile), date, time), dataFile)
+    updateFile(removeOld(getLst(dataFile), current_date, time), dataFile)
     #print initmessage
-    makeLable(initMessage(now, date, daysLeft), 18)
+    makeLable(initMessage(now, current_date, daysLeft), 18)
     #pint calendar
     tk.Label(root, text=miniCal(now), font="TkFixedFont", justify=tk.LEFT, fg=lablelc, bg=lablebg).pack()
-    rcButton('Today\n'+str(len(inToday(getLst(dataFile), date))), user.checkToday)
-    rcButton('Tomorrow\n'+str(len(inTomorrow(getLst(dataFile), date))), user.checkTomorrow)
-    rcButton('This Week\n'+str(len(inWeek(getLst(dataFile), date))), user.checkWeek)
+    rcButton('Today\n'+str(len(inToday(getLst(dataFile), current_date))), user.checkToday)
+    rcButton('Tomorrow\n'+str(len(inTomorrow(getLst(dataFile), current_date))), user.checkTomorrow)
+    rcButton('This Week\n'+str(len(inWeek(getLst(dataFile), current_date))), user.checkWeek)
     rcButton('All Data\n'+str(len(getLst(dataFile))), user.checkSchedual)
     makeButton('Options', user.options)
     tk.Label(root, text='\n\n\nDeveloped By Thomas Gomez @https://github.com/BruzaTom', fg=lablelc, bg="#333333", font=("Arial", 10, "bold")).pack()
@@ -561,7 +569,7 @@ def inTomorrow(dictLst, date):
         for diction in dictLst:
             print(f"dict: {int(diction['Year'] + diction['Month'] + diction['Day'])}, over: {int(overYear + overMonth + overDay)}")
             if int(diction['Year'] + diction['Month'] + diction['Day']) <= int(overYear + overMonth + overDay):
-                if diction not in inToday(dictLst, date):
+                if diction not in inToday(dictLst, current_date):
                     tempLst.append(diction)
     else:
         for diction in dictLst:
@@ -669,8 +677,8 @@ def timeuntil(year, month, day, today):
     eventstring = year+month+day
     convert = str(today)
     todaystring = convert[:4]+convert[5:7]+convert[8:10]
-    end = datetime.datetime.strptime(eventstring, "%Y%m%d").date()
-    start = datetime.datetime.strptime(todaystring, "%Y%m%d").date()
+    end = datetime.strptime(eventstring, "%Y%m%d").date()
+    start = datetime.strptime(todaystring, "%Y%m%d").date()
     diff = end - start
     #print(eventstring)
     #print(today)
@@ -684,12 +692,62 @@ def makeDict(event, year, month, day, time, apm, code, reo):
         'Year': year,
         'Month': month,
         'Day': day,
-        'Dayname': calendar.day_abbr[datetime.date(int(year), int(month), int(day)).weekday()],
+        'Dayname': calendar.day_abbr[date(int(year), int(month), int(day)).weekday()],
         'Time': time[:2]+':'+time[2:]+apm,
         'Reo' : reo,
         'Code': code
         })
     return newDict
+
+def makeReo(data):
+    if data['Reo'] != 'None':
+        makeLable("Reoccurs on these dates.", 15)
+        date = f'{data["Year"]}-{data["Month"]}-{data["Day"]}'
+        frame = tk.Frame(root)
+        frame.pack(padx=8, pady=10)
+        scrollbar = tk.Scrollbar(frame, orient="vertical")
+        listbox = tk.Listbox(frame, yscrollcommand=scrollbar.set, height=10, width=15)
+        scrollbar.config(command=listbox.yview)
+        listbox.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        if data['Reo'] == 'Monthly':
+            def generate_dates(start_date_str, interval_months, count):
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+                return [(start_date + relativedelta(months=interval_months * i)).strftime('%m-%d-%Y') for i in range(count)]
+            dates = generate_dates(date, 1, 15)
+            for date in dates:
+                listbox.insert("end", date)
+        if data['Reo'] == 'Yearly':
+            def generate_dates(start_date_str, interval_years, count):
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+                return [(start_date + relativedelta(years=interval_years * i)).strftime('%m-%d-%Y') for i in range(count)]
+            dates = generate_dates(date, 1, 15)
+            for date in dates:
+                listbox.insert("end", date)
+        if data['Reo'] == 'Bi-Weekly':
+            def generate_dates(start_date, interval_days, count):
+                return [(start_date + timedelta(days=interval_days * i)).strftime('%m-%d-%Y') for i in range(count)]
+            start_date = datetime.strptime(date, '%Y-%m-%d')
+            dates = generate_dates(start_date, 14, 20)
+            for date in dates:
+                listbox.insert("end", date)
+        if data['Reo'] == 'Weekly':
+            def generate_dates(start_date, interval_days, count):
+                return [(start_date + timedelta(days=interval_days * i)).strftime('%m-%d-%Y') for i in range(count)]
+            start_date = datetime.strptime(date, '%Y-%m-%d')
+            dates = generate_dates(start_date, 7, 20)
+            for date in dates:
+                listbox.insert("end", date)
+        if data['Reo'] == 'Daily':
+            def generate_dates(start_date, interval_days, count):
+                return [(start_date + timedelta(days=interval_days * i)).strftime('%m-%d-%Y') for i in range(count)]
+            start_date = datetime.strptime(date, '%Y-%m-%d')
+            dates = generate_dates(start_date, 1, 20)
+            for date in dates:
+                listbox.insert("end", date)
+    else:
+        makeLable("Does not reoccur.", 15)
+
 
 def updateFile(Lst, file):
     with open(file, "w") as f:
@@ -728,14 +786,14 @@ lablebg = lableGrey
 lablelc = userColors[0]
 #globals
 dataFile = os.path.join(script_dir, "pldata/plannerData.txt")
-now = datetime.datetime.now()
+now = datetime.now()
 days = getDays(now)
-today = str(datetime.datetime.today())
+today = str(datetime.today())
 time = timeOnly(today)
-date = dateOnly(today)
-day = getDay(date)
+current_date = dateOnly(today)
+day = getDay(current_date)
 daysLeft = getDaysLeft(days, day)
-updateFile(removeOld(getLst(dataFile), date, time), dataFile)
+updateFile(removeOld(getLst(dataFile), current_date, time), dataFile)
 dataLst = getLst(dataFile)
 
 main()
