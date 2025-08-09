@@ -124,8 +124,8 @@ class App:
         if tempLst == []:
             return []
         for data in tempLst:
-             tup = ( f"This event is in {timeuntil(data['Year'], data['Month'], data['Day'], datetime.now())} days.\n", f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}\nThis event reoccurs {data['Reo']}.", data)#could fix the days string to day if one day
-             tuplst.append(tup)
+            tup = ( f"This event is in {timeuntil(data['Year'], data['Month'], data['Day'], datetime.now())} days.\n", f"{data['Event']} on {data['Dayname']} {data['Month']}-{data['Day']}-{data['Year']} at {data['Time']}. ID#{data['Code']}\nThis event reoccurs {data['Reo']}.", data)#could fix the days string to day if one day
+            tuplst.append(tup)
         return tuplst
 
     def debuger(self, value):
@@ -172,17 +172,17 @@ class App:
                 assighnreo(flag=True)
             else:
                 if answer == "n":
-                   self.results.append("None")
+                    self.results.append("None")
                 if answer == "d":
-                   self.results.append("Daily")
+                    self.results.append("Daily")
                 if answer == "w":
-                   self.results.append("Weekly")
+                    self.results.append("Weekly")
                 if answer == "bw":
-                   self.results.append("Bi-Weekly")
+                    self.results.append("Bi-Weekly")
                 if answer == "m":
-                   self.results.append("Monthly")
+                    self.results.append("Monthly")
                 if answer == "y":
-                   self.results.append("Yearly")
+                    self.results.append("Yearly")
             print(self.results) 
             self.func()
         def assighnreo(flag=False):
@@ -341,13 +341,13 @@ class App:
                 self.dataLst = getLst(file)
                 makeLable(f"Data updated..\n", 16)
                 tk.Button(
-                    root,
-                    text="Back",
-                    command=func,
-                    fg=buttonlc, bg=buttonbg,
-                    height=3, width=8,
-                    font=("Arial", 12, "bold")
-                    ).pack()
+                        root,
+                        text="Back",
+                        command=func,
+                        fg=buttonlc, bg=buttonbg,
+                        height=3, width=8,
+                        font=("Arial", 12, "bold")
+                        ).pack()
                 makeButton('Home', self.btm)
                 root.mainloop()
             def editDiscr(thisDict):
@@ -435,13 +435,13 @@ class App:
         makeButton('Edit', self.editData)
         makeButton('Home', self.btm)
         tk.Button(
-        root,
-        text='Settings',
-        command=self.settings,
-        fg=buttonlc, bg=buttonbg,
-        height=1, width=8,
-        font=("Arial", 12, "bold")
-        ).pack()
+                root,
+                text='Settings',
+                command=self.settings,
+                fg=buttonlc, bg=buttonbg,
+                height=1, width=8,
+                font=("Arial", 12, "bold")
+                ).pack()
         root.mainloop()
 
     def scheme2(self):
@@ -453,7 +453,7 @@ class App:
         userColors[0] = green
         updateFile(userColors, colorsFile)
         self.settings()
-        
+
     def scheme1(self):
         global buttonlc
         global lablelc
@@ -526,32 +526,32 @@ def forget_all(parent):
 #End tkinter
 def rcButton(name, func):
     return tk.Button(
-        root,
-        text=name,
-        command=func,
-        fg=buttonbg, bg=buttonlc,
-        height=3, width=8,
-        font=("Arial", 12, "bold")
-        ).pack()
+            root,
+            text=name,
+            command=func,
+            fg=buttonbg, bg=buttonlc,
+            height=3, width=8,
+            font=("Arial", 12, "bold")
+            ).pack()
 
 def makeButton(name, func, length=8):
     return tk.Button(
-        root,
-        text=name,
-        command=func,
-        fg=buttonlc, bg=buttonbg,
-        height=3, width=length,
-        font=("Arial", 12, "bold")
-        ).pack()
+            root,
+            text=name,
+            command=func,
+            fg=buttonlc, bg=buttonbg,
+            height=3, width=length,
+            font=("Arial", 12, "bold")
+            ).pack()
 
 def sort_dates(dictLst):
     tempLst = dictLst.copy()
     return sorted(sorted(sorted(sorted(sorted(tempLst,
-        key=lambda n: n['Time'][5]),
-        key=lambda t: t['Time']),
-        key=lambda d: d['Day']),
-        key=lambda m: m['Month']),
-        key=lambda y: y['Year']) 
+                                              key=lambda n: n['Time'][5]),
+                                       key=lambda t: t['Time']),
+                                key=lambda d: d['Day']),
+                         key=lambda m: m['Month']),
+                  key=lambda y: y['Year']) 
 
 def inTomorrow(dictLst, date):
     tempLst = []
@@ -591,6 +591,36 @@ def timeOnly(today):
     time = today[11:13] + today[14:16]
     return time
 
+def reocurrance(diction):
+    eventDate = int(diction['Year'] + diction['Month'] + diction['Day'] + diction['Time'][0:2] + diction['Time'][3:5])
+    if diction['Reo'] == 'Monthly':
+        diction['Month'] = str(int(diction['Month']) + 1)#increment month
+        if int(diction['Month']) > 12:#if past dec
+            diction['Month'] = '01'#reset to jan
+            diction['Year'] = str(int(diction['Year']) + 1)#increment year
+    if diction['Reo'] == 'Yearly':
+        diction['Year'] = str(int(diction['Year']) + 1)#increment year
+    #func for incrementdays
+    def incrementdays(number_of_days):
+        max_day = calendar.monthrange(int(diction['Year']), int(diction['Month']))[1]#find max day date for the month
+        calculated_day = int(diction['Day']) + number_of_days#add 14 days to current day
+        if calculated_day > max_day:#if the days go past the max date
+            diction['Month'] = str(int(diction['Month']) + 1).zfill(2)#increment month
+            if int(diction['Month']) > 12:#if past dec
+                diction['Year'] = str(int(diction['Year']) + 1)#increment year
+                diction['Month'] = '01'#reset to jan
+            diction['Day'] = str(calculated_day - max_day).zfill(2)#new day is remainder after the month
+        else:
+            diction['Day'] = str(calculated_day).zfill(2)#else just adjust the date with incremented days
+    #usecases for incrementdays
+    if diction['Reo'] == 'Bi-Weekly':
+        incrementdays(14)
+    if diction['Reo'] == 'Weekly':
+        incrementdays(7)
+    if diction['Reo'] == 'Daily':
+        incrementdays(1)
+    return diction
+
 def removeOld(dictLst, date, time):
     tempLst = []
     todayDate = int(date[0:4] + date[5:7] + date[8:10] + time)
@@ -603,6 +633,9 @@ def removeOld(dictLst, date, time):
             eventDate = int(diction['Year'] + diction['Month'] + diction['Day'] + "00" + diction['Time'][3:5])
         if todayDate <= eventDate:
             tempLst.append(diction)
+        else:
+            if diction['Reo'] != 'None':
+                tempLst.append(reocurrance(diction))
     return tempLst
 
 def getDaysLeft(days, day):
