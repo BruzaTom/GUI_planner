@@ -619,6 +619,8 @@ def reocurrance(diction):
         incrementdays(7)
     if diction['Reo'] == 'Daily':
         incrementdays(1)
+    #update diction['Dayname']
+    diction['Dayname'] = calendar.day_abbr[date(int(diction['Year']), int(diction['Month']), int(diction['Day'])).weekday()]
     return diction
 
 def removeOld(dictLst, date, time):
