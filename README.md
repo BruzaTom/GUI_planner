@@ -20,8 +20,8 @@ Installation
 Clone the repository and run the planner:
 
 ```bash
-git clone https://github.com/yourusername/ritualplanner.git
-cd ritualplanner
+git clone https://github.com/BruzaTom/GUI_planner.git
+cd GUI_planner
 python main.py
 ```
 
